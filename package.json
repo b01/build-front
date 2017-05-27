@@ -1,0 +1,25 @@
+{
+  "name": "build-front",
+  "version": "1.0.0",
+  "description": "Tools to compile CSS from LESS or SASS and minify JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b01/build-front.git"
+  },
+  "keywords": [
+    "build",
+    "front-end",
+    "css",
+    "js"
+  ],
+  "author": "Khalifah Shabazz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/b01/build-front/issues"
+  },
+  "homepage": "https://github.com/b01/build-front#readme"
+}
