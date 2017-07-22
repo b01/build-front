@@ -9,8 +9,7 @@ const
     babel = require('babel-core'),
     glob = require("glob"),
     fs = require("fs"),
-    tools = require(__dirname + "/tools"),
-    path = require("path");
+    tools = require(__dirname + "/tools");
 
 /**
  *
@@ -60,9 +59,7 @@ let transformJs = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
     glob(pGlobPattern, globOptions, (pErr, pFiles) => {
         let i;
 
-        console.log('pErr', typeof pErr);
-
-        if (typeof pErr === null) {
+        if (pErr === null) {//TODO: check the docs about comparing null like this.
             console.log(pErr);
         } else if (pFiles.length > 0) {
             for (i in pFiles) {
@@ -74,30 +71,6 @@ let transformJs = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
             }
         }
     });
-};
-
-/**
- * @param {object} pErr
- * @param {array} pFiles
- */
-let jsConverter = (pErr, pFiles) => {
-    let i, transformOptions;
-
-    transformOptions = {};
-
-    console.log('pErr', typeof pErr);
-
-    if (typeof pErr === null) {
-        console.log(pErr);
-    } else if (pFiles.length > 0) {
-        for (i in pFiles) {
-            if (!pFiles.hasOwnProperty(i)) {
-                continue;
-            }
-
-            transformFile(pFiles[i], pSourceDir, pOutDir, transformOptions)
-        }
-    }
 };
 
 exports.transformJs = transformJs;
