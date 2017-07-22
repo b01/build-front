@@ -4,7 +4,7 @@
   "description": "Tools to compile CSS from LESS or SASS and minify JavaScript.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "node-sass": "^4.0"
   },
   "devDependencies": {
-    "eslint": "^4.0"
+    "eslint": "^4.0",
+    "mocha": "^3.0"
   }
 }

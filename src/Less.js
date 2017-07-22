@@ -30,14 +30,14 @@ Less.prototype.compile = function (pGlobExp, pGlobOptions) {
     sourceFiles = glob.read(pGlobExp, pGlobOptions);
 
     // Loop through each file, converting each to CSS.
-    sourceFiles.on("file", this.buildCssFile.bind(this));
+    sourceFiles.on("file", this.compileFile.bind(this));
 };
 
 /**
  *
  * @param name
  */
-Less.prototype.buildCssFile = function (file)
+Less.prototype.compileFile = function (file)
 {
     var lessFile, cssFile, srcDir, isProd, fileExt, name;
 
