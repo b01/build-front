@@ -1,7 +1,7 @@
 "use strict";
 const
     fs = require("fs"),
-    glob = require("glob-plus"),
+    glob = require("glob"),
     less = require("less");
 
 /**

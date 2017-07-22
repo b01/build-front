@@ -8,7 +8,7 @@
 
 const
     babel = require('babel-cli'),
-    glob = require("glob-plus"),
+    glob = require("glob"),
     fs = require("fs");
 
 /**

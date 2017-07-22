@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/b01/build-front#readme",
   "dependencies": {
-    "glob-plus": "^0.0",
+    "glob": "^7.0",
     "less": "^2.0",
     "node-sass": "^4.0"
   },
