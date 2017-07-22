@@ -10,65 +10,67 @@ const
  * Compile all *.less files in the less directory and save them as
  * *.css in web-ui/css.
  */
-function Less(pSrcDir, pOutDir, pIsProd)
-{
-    this.srcDir = pSrcDir;
-    this.outDir = pOutDir;
-    this.isProd = pIsProd;
-}
+class Less {
+    constructor(pSrcDir, pOutDir, pIsProd) {
+        this.srcDir = pSrcDir;
+        this.outDir = pOutDir;
+        this.isProd = pIsProd;
+    }
 
-/**
- * Convert LESS to CSS.
- *
- * @param {string} pGlobExp
- * @param {object} pGlobOptions
- */
-Less.prototype.compile = function (pGlobExp, pGlobOptions) {
-    var sourceFiles;
+    /**
+     * Convert LESS to CSS.
+     *
+     * @param {string} pGlobExp
+     * @param {object} pGlobOptions
+     */
+    compile(pGlobExp, pGlobOptions) {
+        let sourceFiles, file, i;
 
-    // Load files from the source directory.
-    sourceFiles = glob.read(pGlobExp, pGlobOptions);
+        // Load files from the source directory.
+        sourceFiles = glob.sync(pGlobExp, pGlobOptions);
 
-    // Loop through each file, converting each to CSS.
-    sourceFiles.on("file", this.compileFile.bind(this));
-};
-
-/**
- *
- * @param name
- */
-Less.prototype.compileFile = function (file)
-{
-    var lessFile, cssFile, srcDir, isProd, fileExt, name;
-
-    name = file.name;
-    srcDir = this.srcDir;
-    isProd = this.isProd;
-    lessFile = srcDir + "/" + name;
-    fileExt = isProd ? ".min.css" : ".css";
-    cssFile = this.outDir + "/" + name.replace(".less", fileExt);
-
-    console.log("Processing " + lessFile);
-
-    fs.readFile(lessFile, "utf8", function (error, content) {
-        if (error !== null) {
-            console.log(error);
+        // Loop through each file, converting each to CSS.
+        for (i in sourceFiles) {
+            file = sourceFiles[i];
+            this.compileFile(file);
         }
-        // Compile LESS to CSS and compress as well.
-        less.render(content, {paths: [srcDir], compress: isProd}, function (error, output) {
+    }
+
+    /**
+     *
+     * @param name
+     */
+    compileFile(name) {
+        let lessFile, cssFile, srcDir, isProd, fileExt;
+
+        srcDir = this.srcDir;
+        isProd = this.isProd;
+        lessFile = srcDir + "/" + name;
+        fileExt = isProd ? ".min.css" : ".css";
+        cssFile = this.outDir + "/" + name.replace(".less", fileExt);
+
+        console.log("Processing " + lessFile);
+
+        fs.readFile(lessFile, "utf8", function (error, content) {
             if (error !== null) {
                 console.log(error);
             }
-
-            fs.writeFile(cssFile, output.css, function (error) {
+            // Compile LESS to CSS and compress as well.
+            less.render(content, {paths: [srcDir], compress: isProd}, function (error, output) {
                 if (error !== null) {
                     console.log(error);
-                } else {
-                    console.log("compiled " + cssFile);
                 }
+
+                fs.writeFile(cssFile, output.css, function (error) {
+                    if (error !== null) {
+                        console.log(error);
+                    } else {
+                        console.log("compiled " + cssFile);
+                    }
+                });
             });
         });
-    });
-};
+    }
+}
 
 exports.Less = Less;

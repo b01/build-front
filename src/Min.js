@@ -7,7 +7,7 @@
  */
 
 const
-    babel = require('babel-cli'),
+    babel = require('babel-core'),
     glob = require("glob"),
     fs = require("fs");
 
@@ -15,52 +15,55 @@ const
  *
  * @param {string} pSrcDir
  * @param {string} pOutDir
- * @param {boolean} pIsProd
+ * @param {boolean} pTransformOptions
  * @constructor
  */
-function Min(pSrcDir, pOutDir, pTransformOptions)
+class Min
 {
-    this.srcDir = pSrcDir;
-    this.outDir = pOutDir;
-    this.transformOptions = pTransformOptions;
-}
+    constructor(pSrcDir, pOutDir, pTransformOptions) {
+        this.srcDir = pSrcDir;
+        this.outDir = pOutDir;
+        this.transformOptions = pTransformOptions;
+    }
 
-/**
- *
- * @param {string} pGlobExp
- * @param {object} pGlobOptions
- */
-Min.prototype.minify = function (pGlobExp, pGlobOptions) {
-    var sourceFiles;
+    /**
+     *
+     * @param {string} pGlobExp
+     * @param {object} pGlobOptions
+     */
+    compile(pGlobExp, pGlobOptions) {
+        let sourceFiles, file, i;
 
-    // Load files from the source directory.
-    sourceFiles = glob.read(pGlobExp, pGlobOptions);
+        // Load files from the source directory.
+        sourceFiles = glob.sync(pGlobExp, pGlobOptions);
 
-    // For each source file...
-    sourceFiles.on('file', minifyFile.bind(this));
-};
-
-/**
- *
- * @param {object} file
- */
-function minifyFile(file)
-{
-    var name = file.name,
-        srcFile = this.srcDir + '/' + name,
-        minFile = this.outDir + "/" + name.replace(".js", ".min.js");
-
-    console.log("Compressing " + srcFile);
-
-    // Do compression on each source file.
-    babel.tranformFile(srcFile, this.transformOptions, (error, result) => {
-        if (typeof error === "string" && error.length > 0) {
-            console.log(error);
-        } else {
-            // Write the file, and overwrite if exists.
-            fs.writeFile(minFile, result.code);
+        // Loop through each file, converting each to CSS.
+        for (i in sourceFiles) {
+            file = sourceFiles[i];
+            this.compileFile(file);
         }
-    });
+    }
+
+    /**
+     *
+     * @param {object} file
+     */
+    compileFile(name) {
+        var srcFile = this.srcDir + '/' + name,
+            minFile = this.outDir + "/" + name.replace(".js", ".min.js");
+
+        console.log("Compressing " + srcFile);
+
+        // Do compression on each source file.
+        babel.tranformFile(srcFile, this.transformOptions, (error, result) => {
+            if (typeof error === "string" && error.length > 0) {
+                console.log(error);
+            } else {
+                // Write the file, and overwrite if exists.
+                fs.writeFile(minFile, result.code);
+            }
+        });
+    }
 }
 
 exports.Min = Min;
