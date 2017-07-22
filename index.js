@@ -1,9 +1,8 @@
 "use strict";
 
 const Less = require(__dirname + "/src/Less").Less;
-const Min = require(__dirname + "/src/Min").Min;
+const transformJs = require(__dirname + "/src/transform-js").transformJs;
 const Clean = require(__dirname + "/src/Clean").Clean;
-console.log(Clean);
 
 /**
  *
@@ -17,17 +16,6 @@ function less(pSrcDir, pOutDir, pIsProd)
 }
 
 /**
- *
- * @param pSrcDir
- * @param pOutDir
- * @param pIsProd
- */
-function js(pSrcDir, pOutDir, pIsProd)
-{
-    return new Min(pSrcDir, pOutDir, pIsProd);
-}
-
-/**
  * @param {array} pPaths
  */
 function clean(pPaths)
@@ -38,5 +26,5 @@ function clean(pPaths)
 }
 
 exports.less = less;
-exports.js = js;
+exports.transformJs = transformJs;
 exports.cleanDirs = clean;
