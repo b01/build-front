@@ -6,10 +6,10 @@ const
 
 describe("Less", function () {
     describe("compileFile", function () {
-        it("", function () {
-            // console.log("Less", Less);
+        it("Should compile .less to .css", function () {
             let less = new Less(FIXTURES_DIR, TMP_DIR, false);
             less.compileFile({"name": "file-1.less"})
+            // assert.is()
         })
     });
 });
