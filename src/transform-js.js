@@ -12,21 +12,21 @@ const
 /**
  *
  * @param {string} pFilename
- * @param {string} pSourceDir
+ * @param {string} pSrcDir
  * @param {string} pOutDir
- * @param {object} pTransformOptions
+ * @param {object} pTransformConfig
  */
-let transformFile = (pFilename, pSourceDir, pOutDir, pTransformOptions) => {
+let transformFile = (pFilename, pSrcDir, pOutDir, pTransformConfig) => {
     let minFile, srcFile;
 
-    srcFile = pSourceDir + "/" + pFilename;
+    srcFile = pSrcDir + "/" + pFilename;
     minFile = pOutDir + "/" + pFilename.replace(".js", ".min.js");
 
     console.log(`Transforming ${srcFile}`);
 
     // Do compression on each source file.
     return new Promise((pFulfill, pReject) => {
-        babel.transformFile(srcFile, pTransformOptions, (error, result) => {
+        babel.transformFile(srcFile, pTransformConfig, (error, result) => {
             if (error !== null) {
                 pReject(error);
             } else if (typeof result === "undefined") {// usually a bad srcFile.
@@ -49,21 +49,22 @@ let transformFile = (pFilename, pSourceDir, pOutDir, pTransformOptions) => {
  * Transform newer JS to ES5.
  *
  * @param {string} pGlobPattern
- * @param {string} pSourceDir
+ * @param {string} pSrcDir
  * @param {string} pOutDir
- * @param {object} pOptions
+ * @param {object} pConfig
  */
-let jsToES5 = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
-    let globOptions, transformOptions;
+let jsToES5 = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
+    let globConfig, transformConfig;
 
     // Will use the source dir as the current working directory when no options
     // specified.
-    globOptions = pOptions.glob || {"cwd": pSourceDir};
-    transformOptions = pOptions.transform || {};
+    globConfig = pConfig.glob || {};
+    globConfig.cwd = pSrcDir;
+    transformConfig = pConfig.transform || {};
 
     // Loop through each file, converting each.
     return new Promise((pFulfill, pReject) => {
-        glob(pGlobPattern, globOptions, (pErr, pFiles) => {
+        glob(pGlobPattern, globConfig, (pErr, pFiles) => {
             let i, allPromises, fileSave;
 
             if (pErr !== null) {// TODO: check the docs about comparing null like this.
@@ -75,12 +76,12 @@ let jsToES5 = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
                         continue;
                     }
 
-                    fileSave = transformFile(pFiles[i], pSourceDir, pOutDir, transformOptions)
+                    fileSave = transformFile(pFiles[i], pSrcDir, pOutDir, transformConfig);
                     allPromises.push(fileSave);
                 }
             }
 
-            Promise.all(allPromises).then(pFulfill).catch(pReject);
+            Promise.all(allPromises).catch(pReject).then(pFulfill);
         });
     });
 };
