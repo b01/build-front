@@ -4,6 +4,11 @@
             "targets": {
                 "node": true
             }
+        }],
+        ["airbnb", {
+            "targets": {
+                "node": 6
+            }
         }]
     ],
     "plugins": ["transform-es2015-classes"]

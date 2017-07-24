@@ -30,7 +30,9 @@
     "node-sass": "^4.0"
   },
   "devDependencies": {
+    "babel-preset-airbnb": "^2.0",
     "eslint": "^4.0",
+    "eslint-plugin-import": "^2.0",
     "mocha": "^3.0"
   }
 }
