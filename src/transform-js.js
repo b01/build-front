@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Transform JS files.
  *
@@ -8,7 +7,6 @@
 const
     babel = require('babel-core'),
     glob = require("glob"),
-    fs = require("fs"),
     tools = require(__dirname + "/tools");
 
 /**
@@ -24,18 +22,26 @@ let transformFile = (pFilename, pSourceDir, pOutDir, pTransformOptions) => {
     srcFile = pSourceDir + "/" + pFilename;
     minFile = pOutDir + "/" + pFilename.replace(".js", ".min.js");
 
-    console.log(`Compressing ${srcFile} -> ${minFile}`);
+    console.log(`Transforming ${srcFile}`);
 
     // Do compression on each source file.
-    babel.transformFile(srcFile, pTransformOptions, (error, result) => {
-        if (typeof error === "string" && error.length > 0) {
-            console.log(error);
-        } else if (typeof result === "undefined") {// usually a bad srcFile.
-            console.log("Could not transform", srcFile);
-        } else {
-            // Write the file, and overwrite if exists.
-            tools.saveFile(minFile, result.code);
-        }
+    return new Promise((pFulfill, pReject) => {
+        babel.transformFile(srcFile, pTransformOptions, (error, result) => {
+            if (error !== null) {
+                pReject(error);
+            } else if (typeof result === "undefined") {// usually a bad srcFile.
+                console.log("Could not transform", srcFile);
+                pReject(error);
+            } else {
+                // Write the file, and overwrite if exists.
+                tools.saveFile(minFile, result.code)
+                    .catch(pReject)
+                    .then(function () {
+                        console.log("saved", minFile);
+                        pFulfill();
+                    });
+            }
+        });
     });
 };
 
@@ -47,7 +53,7 @@ let transformFile = (pFilename, pSourceDir, pOutDir, pTransformOptions) => {
  * @param {string} pOutDir
  * @param {object} pOptions
  */
-let transformJs = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
+let jsToES5 = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
     let globOptions, transformOptions;
 
     // Will use the source dir as the current working directory when no options
@@ -56,21 +62,27 @@ let transformJs = (pGlobPattern, pSourceDir, pOutDir, pOptions) => {
     transformOptions = pOptions.transform || {};
 
     // Loop through each file, converting each.
-    glob(pGlobPattern, globOptions, (pErr, pFiles) => {
-        let i;
+    return new Promise((pFulfill, pReject) => {
+        glob(pGlobPattern, globOptions, (pErr, pFiles) => {
+            let i, allPromises, fileSave;
 
-        if (pErr === null) {//TODO: check the docs about comparing null like this.
-            console.log(pErr);
-        } else if (pFiles.length > 0) {
-            for (i in pFiles) {
-                if (!pFiles.hasOwnProperty(i)) {
-                    continue;
+            if (pErr !== null) {// TODO: check the docs about comparing null like this.
+                console.log(pErr);
+            } else if (pFiles.length > 0) {
+                allPromises = [];
+                for (i in pFiles) {
+                    if (!pFiles.hasOwnProperty(i)) {
+                        continue;
+                    }
+
+                    fileSave = transformFile(pFiles[i], pSourceDir, pOutDir, transformOptions)
+                    allPromises.push(fileSave);
                 }
-
-                transformFile(pFiles[i], pSourceDir, pOutDir, transformOptions)
             }
-        }
+
+            Promise.all(allPromises).then(pFulfill).catch(pReject);
+        });
     });
 };
 
-exports.transformJs = transformJs;
+exports.jsToES5 = jsToES5;

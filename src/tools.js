@@ -21,7 +21,16 @@ function saveFile(pPath, pContent)
     }
 
     // Write the file, and overwrite if exists.
-    return fs.writeFile(pPath, pContent);
+    return new Promise((pFulfill, pReject) => {
+        fs.writeFile(pPath, pContent, (pErr) => {
+            "use strict";
+            if (pErr !== null) {
+                pReject(pErr);
+            } else {
+                pFulfill();
+            }
+        });
+    });
 }
 
 exports.saveFile = saveFile;

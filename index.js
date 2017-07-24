@@ -1,8 +1,6 @@
-"use strict";
-
-const Less = require(__dirname + "/src/Less").Less;
-const transformJs = require(__dirname + "/src/transform-js").transformJs;
-const Clean = require(__dirname + "/src/Clean").Clean;
+const SRC_DIR = __dirname + "/src";
+const Less = require(SRC_DIR + "/Less").Less;
+const Clean = require(SRC_DIR + "/Clean").Clean;
 
 /**
  *
@@ -26,5 +24,5 @@ function clean(pPaths)
 }
 
 exports.less = less;
-exports.transformJs = transformJs;
+exports.jsToES5 = require(SRC_DIR + "/transform-js").jsToES5;
 exports.cleanDirs = clean;
