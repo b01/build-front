@@ -1,15 +1,26 @@
 const
     assert = require("assert"),
-    Less = require(__dirname + "/../src/Less").Less,
+    lessToCss = require(__dirname + "/../src/Less").lessToCss,
     FIXTURES_DIR = __dirname + "/fixtures",
-    TMP_DIR =  __dirname + "/tmp";
+    TMP_DIR =  __dirname + "/tmp",
+    fs = require("fs");
 
-describe("Less", function () {
-    describe("compileFile", function () {
-        it("Should compile .less to .css", function () {
-            let less = new Less(FIXTURES_DIR, TMP_DIR, false);
-            less.compileFile("file-1.less");
-            // assert.is()
-        })
+describe("lessToCss",() => {
+    let outDir, srcDir;
+
+    outDir = TMP_DIR + "/less";
+    srcDir = FIXTURES_DIR + "/less";
+
+    it("Should compile .less to .css", () => {
+        let fixture = "";
+        lessToCss(
+            "**/*.less",
+            srcDir,
+            outDir,
+            false,
+            {}
+        );
+        $acutal = fs.existsSync(outDir + "/file-1.css");
+        assert.equal($acutal , true);
     });
 });
