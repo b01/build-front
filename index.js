@@ -11,6 +11,6 @@ function clean(pPaths)
     return clean.dirs(pPaths);
 }
 
-exports.lessToCss = require(SRC_DIR + "/Less").lessToCss;
+exports.lessToCss = require(SRC_DIR + "/lessToCss").lessToCss;
 exports.jsToES5 = require(SRC_DIR + "/transform-js").jsToES5;
 exports.cleanDirs = clean;
