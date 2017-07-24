@@ -1,6 +1,6 @@
 {
   "name": "@khalifahks/build-front",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Tools to compile CSS from LESS or SASS and minify JavaScript.",
   "main": "index.js",
   "scripts": {
