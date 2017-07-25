@@ -1,6 +1,6 @@
 {
   "name": "build-front",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Tools to compile CSS from LESS or SASS and minify JavaScript.",
   "main": "index.js",
   "scripts": {

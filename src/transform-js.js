@@ -86,4 +86,4 @@ let jsToES5 = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
     });
 };
 
-exports.jsToES5 = jsToES5;
+module.exports = jsToES5;

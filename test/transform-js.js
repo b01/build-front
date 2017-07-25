@@ -3,7 +3,7 @@ const
     FIXTURES_DIR = __dirname + "/fixtures",
     TMP_DIR = __dirname + "/tmp";
 
-const jsToES5 = require(SRC_DIR + "/transform-js").jsToES5;
+const jsToES5 = require(SRC_DIR + "/transform-js");
 const fs = require("fs");
 const assert = require('assert');
 
