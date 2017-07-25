@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Performs front-end cleanup.
  */
@@ -12,7 +10,8 @@ const
 /**
  * Delete directories and the files in them recursively.
  *
- * @param pDirs
+ * @param {arra} pDirs
+ * @param {string} pPlatform
  */
 let removeDirs = (pDirs, pPlatform) => {
     let platform, aPath, allPromises, primrose;
@@ -32,6 +31,7 @@ let removeDirs = (pDirs, pPlatform) => {
  * Remove a directory.
  *
  * @param {string} pPath Directory path.
+ * @param {string} pPlatform
  */
 let removeDirContents = (pPath, pPlatform) => {
     let removeDirCmd, isWindows;
@@ -55,4 +55,4 @@ let removeDirContents = (pPath, pPlatform) => {
     });
 };
 
-exports.removeDirs = removeDirs;
+module.exports = removeDirs;

@@ -1,6 +1,6 @@
 const
     assert = require("assert"),
-    removeDirs = require(__dirname + "/../src/clean").removeDirs,
+    removeDirs = require(__dirname + "/../src/clean"),
     tools = require(__dirname + "/../src/tools").tools,
     TMP_DIR =  __dirname + "/tmp",
     fs = require("fs");

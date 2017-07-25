@@ -1,6 +1,6 @@
 const
     assert = require("assert"),
-    lessToCss = require(__dirname + "/../src/lessToCss").lessToCss,
+    lessToCss = require(__dirname + "/../src/lessToCss"),
     FIXTURES_DIR = __dirname + "/fixtures",
     TMP_DIR =  __dirname + "/tmp",
     fs = require("fs");

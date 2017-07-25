@@ -33,4 +33,6 @@ function saveFile(pPath, pContent)
     });
 }
 
-exports.saveFile = saveFile;
+module.exports = {
+    saveFile: saveFile
+};

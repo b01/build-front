@@ -99,4 +99,4 @@ let compileFile = (name, pSrcDir, pOutDir, pConfig) => {
     });
 };
 
-exports.lessToCss = lessToCss;
+module.exports = lessToCss;
