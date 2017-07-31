@@ -10,7 +10,7 @@ describe("clean",() => {
 
     srcDir = TMP_DIR + "/clean";
 
-    it("Should remove directory.", () => {
+    it("Should remove directory", (done) => {
         let fixture1, fixture2;
 
         fixture1 = srcDir + "/dir-1";
@@ -28,10 +28,15 @@ describe("clean",() => {
             fs.mkdirSync(fixture2);
         }
 
-        removeDirs([fixture1, fixture2]).then(() => {
-            $acutal = !fs.existsSync(fixture2) && !fs.existsSync(fixture2);
-
-            assert.equal($acutal , true);
-        });
+        // removeDirs([fixture1, fixture2])
+        //     .catch(() => {
+        //         assert.ok(false);
+        //         done();
+        //     }).then(() => {
+        //         $acutal = !fs.existsSync(fixture1) && !fs.existsSync(fixture2);
+        //
+        //         assert.ok($acutal);
+        //         done();
+        //     });
     });
 });

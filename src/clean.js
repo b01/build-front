@@ -34,24 +34,24 @@ let removeDirs = (pDirs, pPlatform) => {
  * @param {string} pPlatform
  */
 let removeDirContents = (pPath, pPlatform) => {
-    let removeDirCmd, isWindows;
+    let removeDirCmd, isWindows, strCmd;
 
     isWindows = pPlatform === 'win32';
     removeDirCmd = isWindows ? "rmdir /s /q " : "rm -rf ";
+    strCmd = removeDirCmd + '"' + pPath + '"';
 
     console.log("removing the", pPath, "directory.");
 
     return new Promise((pFulfill, pReject) => {
-        exec(removeDirCmd + '"' + pPath + '"', (pError, pStdout, pStderr) => {
-            if (pError !== null) {
+        exec(strCmd, (pError, pStdout, pStderr) => {
+            if (pError) {
+                console.log("Error removing dir:", pError);
                 pReject(pError);
+            } else {
+                console.log("pStdout", pStdout);
+                console.log("pStderr", pStderr);
+                pFulfill();
             }
-
-            if (pStderr !== null) {
-                pReject(pStderr);
-            }
-
-            pFulfill();
         });
     });
 };
