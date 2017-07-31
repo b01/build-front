@@ -26,7 +26,7 @@ let lessToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
 
         allPromises = [];
 
-        glob(pGlobPattern, pConfig.glob, (pError, pFiles) => {
+        glob(pGlobPattern, globConfig, (pError, pFiles) => {
             if (pError !== null) {
                 console.log(
                     "Unable to find any files with pattern",
