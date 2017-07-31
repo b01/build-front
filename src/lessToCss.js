@@ -7,8 +7,7 @@ const
 /**
  * Convert LESS to CSS.
  *
- * Compile all *.less files in the less directory and save them as
- * *.css in web-ui/css.
+ * Compile all *.less files to *.css in web-ui/css.
  *
  * @param {string} pGlobPattern
  * @param {string} pSrcDir
@@ -30,7 +29,7 @@ let lessToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
         glob(pGlobPattern, pConfig.glob, (pError, pFiles) => {
             if (pError !== null) {
                 console.log(
-                    "Unable to find any LESS files with pattern",
+                    "Unable to find any files with pattern",
                     pGlobPattern
                 );
                 pReject(pError);
@@ -72,7 +71,7 @@ let compileFile = (name, pSrcDir, pOutDir, pConfig) => {
                 pReject(error);
             }
 
-            // Compile LESS to CSS and compress as well.
+            // Compile to CSS and compress as directed.
             less.render(content, lessConfig, (error, output) => {
                 if (error !== null) {
                     console.log("compileFile less failed:", error);
@@ -86,14 +85,6 @@ let compileFile = (name, pSrcDir, pOutDir, pConfig) => {
                         console.log("saved", cssFile);
                         pFulfill();
                     });
-                // fs.writeFile(cssFile, output.css, function (error) {
-                //     if (error !== null) {
-                //         pReject(error);
-                //     } else {
-                //         console.log("done with:", cssFile);
-                //         pFulfill();
-                //     }
-                // });
             });
         });
     });

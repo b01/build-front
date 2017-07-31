@@ -10,11 +10,11 @@ const
 /**
  * Delete directories and the files in them recursively.
  *
- * @param {arra} pDirs
+ * @param {array} pDirs
  * @param {string} pPlatform
  */
 let removeDirs = (pDirs, pPlatform) => {
-    let platform, aPath, allPromises, primrose;
+    let platform, allPromises, primrose;
 
     platform = pPlatform || os.platform();
     allPromises = [];
@@ -40,6 +40,7 @@ let removeDirContents = (pPath, pPlatform) => {
     removeDirCmd = isWindows ? "rmdir /s /q " : "rm -rf ";
 
     console.log("removing the", pPath, "directory.");
+
     return new Promise((pFulfill, pReject) => {
         exec(removeDirCmd + '"' + pPath + '"', (pError, pStdout, pStderr) => {
             if (pError !== null) {
