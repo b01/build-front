@@ -7,9 +7,8 @@
         }],
         ["airbnb", {
             "targets": {
-                "node": 6
+                "node": true
             }
         }]
-    ],
-    "plugins": ["transform-es2015-classes"]
+    ]
 }
