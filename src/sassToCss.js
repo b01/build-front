@@ -9,14 +9,24 @@ const
     sass = require("node-sass"),
     tools = require(__dirname + "/tools");
 
-
+/**
+ * Convert SCSS to CSS using SASS.
+ *
+ * Compile all *.scss files in the scss directory and save them as
+ * *.css in web-ui/css.
+ *
+ * @param {string} pGlobPattern
+ * @param {string} pSrcDir
+ * @param {string} pOutDir
+ * @param {object} pConfig
+ */
 let sassToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
     let globConfig;
 
     globConfig = pConfig.glob || {};
     globConfig.cwd = pSrcDir;
 
-    // Fine *.less files from the source directory.
+    // Fine *.scss files from the source directory.
     return new Promise((pFulfill, pReject) => {
         let allPromises;
 
@@ -31,7 +41,7 @@ let sassToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
                 pReject(pError);
             }
 
-            // Loop through each file, converting each.
+            // Loop through each file, converting each to CSS.
             for (file of pFiles) {
                 primrose = compileFile(file, pSrcDir, pOutDir, pConfig);
                 allPromises.push(primrose);
@@ -50,15 +60,18 @@ let sassToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
  * @param {object} pConfig
  */
 let compileFile = (name, pSrcDir, pOutDir, pConfig) => {
-    let sourceFile, cssFile, sassConfig;
+    let sourceFile, cssFile, sassConfig, fileExt, srcConfig;
 
     sourceFile = pSrcDir + "/" + name;
-    cssFile = pOutDir + "/" + name.replace(".scss", ".css");
     sassConfig = pConfig.sass || {};
     sassConfig.file = sourceFile;
+    fileExt = sassConfig.outputStyle === 'compressed' ? ".min.css" : ".css";
+    cssFile = pOutDir + "/" + name.replace(".scss", fileExt);
+
+    srcConfig.includePaths = [pSrcDir];
+    srcConfig.file = srcFile;
 
     console.log(`Processing ${sourceFile}`);
-
 
     return new Promise((pFulfill, pReject) => {
         // Compile to CSS and compress as directed.
