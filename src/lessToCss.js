@@ -2,12 +2,14 @@ const
     fs = require("fs"),
     glob = require("glob"),
     less = require("less"),
-    tools = require(__dirname + "/tools");
+    PS = require("path").sep,
+    tools = require(__dirname + "/tools"),
+    print = tools.print;
 
 /**
  * Convert LESS to CSS.
  *
- * Compile all *.less files to *.css in web-ui/css.
+ * Compile all *.less files to *.css.
  *
  * @param {string} pGlobPattern
  * @param {string} pSrcDir
@@ -15,35 +17,27 @@ const
  * @param {object} pConfig
  */
 let lessToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
-    let globConfig;
+    let allPromises, file, files, globConfig, primrose;
 
     globConfig = pConfig.glob || {};
     globConfig.cwd = pSrcDir;
 
-    // Fine *.less files from the source directory.
-    return new Promise((pFulfill, pReject) => {
-        let allPromises;
 
-        allPromises = [];
+    // Find files in the source directory.
+    files = glob.sync(pGlobPattern, globConfig);
 
-        glob(pGlobPattern, globConfig, (pError, pFiles) => {
-            if (pError !== null) {
-                console.log(
-                    "Unable to find any files with pattern",
-                    pGlobPattern
-                );
-                pReject(pError);
-            }
+    if (files.length < 1) {
+        throw new Error("Unable to find any files with pattern " + pGlobPattern);
+    }
 
-            // Loop through each file, converting each to CSS.
-            for (file of pFiles) {
-                primrose = compileFile(file, pSrcDir, pOutDir, pConfig);
-                allPromises.push(primrose);
-            }
+    allPromises = [];
+    // Loop through each file, converting each to CSS.
+    for (file of files) {
+        primrose = compileFile(file, pSrcDir, pOutDir, pConfig);
+        allPromises.push(primrose);
+    }
 
-            Promise.all(allPromises).catch(pReject).then(pFulfill);
-        });
-    });
+    return Promise.all(allPromises);
 };
 
 /**
@@ -54,37 +48,42 @@ let lessToCss = (pGlobPattern, pSrcDir, pOutDir, pConfig) => {
  * @param {object} pConfig
  */
 let compileFile = (name, pSrcDir, pOutDir, pConfig) => {
-    let lessFile, cssFile, fileExt, lessConfig;
+    let lessFile, cssFile, fileExt, lessConfig, verbose;
 
-    lessFile = pSrcDir + "/" + name;
+    lessFile = pSrcDir + PS + name;
     lessConfig = pConfig.less || {};
     lessConfig.paths = [pSrcDir];
     fileExt = lessConfig.compress ? ".min.css" : ".css";
-    cssFile = pOutDir + "/" + name.replace(".less", fileExt);
+    cssFile = pOutDir + PS + name.replace(".less", fileExt);
+    verbose = pConfig.hasOwnProperty("verbose") && pConfig.verbose === true;
 
-    console.log("Processing " + lessFile);
+    if (verbose) {
+        print("Processing " + lessFile);
+    }
 
     return new Promise((pFulfill, pReject) => {
-        fs.readFile(lessFile, "utf8", (error, content) => {
-            if (error !== null) {
-                console.log("compileFile:", error);
-                pReject(error);
+        fs.readFile(lessFile, "utf8", (pErr, pContent) => {
+            if (pErr !== null) {
+                pReject(pErr);
             }
 
             // Compile to CSS and compress as directed.
-            less.render(content, lessConfig, (error, output) => {
+            less.render(pContent, lessConfig, (error, output) => {
                 if (error !== null) {
-                    console.log("compileFile less failed:", error);
                     pReject(error);
+                } else {
+                    // Write the file, and overwrite if exists.
+                    tools.saveFile(cssFile, output.css)
+                        .then(
+                            () => {
+                                if (verbose) {
+                                    print("saved " + cssFile);
+                                }
+                                pFulfill();
+                            },
+                            pReject
+                        );
                 }
-
-                // Write the file, and overwrite if exists.
-                tools.saveFile(cssFile, output.css)
-                    .catch(pReject)
-                    .then(function () {
-                        console.log("saved", cssFile);
-                        pFulfill();
-                    });
             });
         });
     });

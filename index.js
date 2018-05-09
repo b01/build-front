@@ -1,6 +1,6 @@
 const SRC_DIR = __dirname + "/src";
 
-exports.jsToES5 = require(SRC_DIR + "/transform-js");
+exports.jsToES5 = require(SRC_DIR + "/jsToES5");
 exports.lessToCss = require(SRC_DIR + "/lessToCss");
-exports.removeDirs = require(SRC_DIR + "/clean");
 exports.sassToCss = require(SRC_DIR + "/sassToCss");
+exports.tools = require(SRC_DIR + "/tools");

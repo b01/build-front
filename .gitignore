@@ -1,9 +1,12 @@
 # Directories
 # -----------
 /.idea/
+/.nyc_output/
 /node_modules/
 /test/tmp/
 
 # Files
 # -----
 /npm-debug.*
+/package-lock.json
+/yarn.lock

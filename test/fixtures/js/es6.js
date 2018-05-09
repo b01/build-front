@@ -1,0 +1,1 @@
+export default myFunc = 21;
